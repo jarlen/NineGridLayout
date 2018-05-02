@@ -5,16 +5,20 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cn.jarlen.richcommon.adapter.RvCommonAdapter;
 import cn.jarlen.richcommon.adapter.RvViewHolder;
 import cn.jarlen.widget.gridlayout.NineGridLayout;
 import cn.jarlen.widget.gridlayout.NineGridLayoutAdapter;
+import cn.jarlen.widget.ninegridlayout.sample.bean.Bean;
 
 public class NineGridLayoutActivity extends Activity {
 
@@ -44,11 +48,27 @@ public class NineGridLayoutActivity extends Activity {
         recyclerView.setLayoutManager(layoutManager);
         picAdapter = new PicAdapter(this);
         recyclerView.setAdapter(picAdapter);
+
+        List<Bean> beanList = new ArrayList<>();
+        for (int index = 0; index < pics.length; index++) {
+            Bean bean = new Bean();
+            bean.setName("" + index);
+            List<String> picList = Arrays.asList(pics).subList(0, index % 9);
+
+            List<Bean.PicBean> picBeanList = new ArrayList<>();
+            for (String pic : picList) {
+                Bean.PicBean picBean = new Bean.PicBean();
+                picBean.setType(index % 3);
+                picBean.setPicUrl(pic);
+                picBeanList.add(picBean);
+            }
+            bean.setPicList(picBeanList);
+            beanList.add(bean);
+        }
+        picAdapter.addDataList(beanList);
     }
 
     public class PicAdapter extends RvCommonAdapter<Bean> {
-
-//        private NineGridLayoutAdapter<PicBean> nineGridLayoutAdapter = new
 
         public PicAdapter(Context context) {
             super(context);
@@ -65,12 +85,13 @@ public class NineGridLayoutActivity extends Activity {
 
                 @Override
                 public View onCreateView(ViewGroup parentView, int position) {
-                    return null;
+                    View nineItemView = LayoutInflater.from(NineGridLayoutActivity.this).inflate(R.layout.layout_nine_item_text, null);
+                    return nineItemView;
                 }
 
                 @Override
                 public int getItemViewType(int position) {
-                    return 0;
+                    return R.layout.layout_nine_item_text;
                 }
 
                 @Override
@@ -85,49 +106,4 @@ public class NineGridLayoutActivity extends Activity {
             return R.layout.layout_nine_grid_item;
         }
     }
-
-
-    public class Bean {
-        String name;
-
-        List<PicBean> picList;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public List<PicBean> getPicList() {
-            return picList;
-        }
-
-        public void setPicList(List<PicBean> picList) {
-            this.picList = picList;
-        }
-    }
-
-    public class PicBean {
-        int type;
-        String picUrl;
-
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
-        }
-
-        public String getPicUrl() {
-            return picUrl;
-        }
-
-        public void setPicUrl(String picUrl) {
-            this.picUrl = picUrl;
-        }
-    }
-
 }
