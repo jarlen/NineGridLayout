@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +81,7 @@ public class NineGridLayoutActivity extends Activity {
             NineGridLayout nineGridLayout = viewHolder.getView(R.id.nineGridLayout);
 
             nameTv.setText(item.getName());
-            nineGridLayout.setViewsData(item.getPicList());
+            Log.e("jarlen", "" + nineGridLayout);
             nineGridLayout.setAdapter(new NineGridLayoutAdapter() {
 
                 @Override
@@ -99,6 +100,7 @@ public class NineGridLayoutActivity extends Activity {
 
                 }
             });
+            nineGridLayout.setViewsData(item.getPicList());
         }
 
         @Override

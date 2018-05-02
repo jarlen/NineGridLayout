@@ -44,13 +44,35 @@ public class NineGridLayout<T> extends ViewGroup {
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
         int totalWidth = width - getPaddingLeft() - getPaddingRight();
-        Log.e("jarlen", "onMeasure   --->   width = " + width + "  height = " + height);
+        Log.e("jarlen", "onMeasure   --->   width = " + width + "  height = " + height + "   totalWidth : " + totalWidth);
         setMeasuredDimension(width, height);
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         Log.e("jarlen", "onLayout");
+        if (this.mViewDatas == null || this.mViewDatas.isEmpty()) {
+            return;
+        }
+        int showChildrenCount = getNeedShowCount(mViewDatas.size());
+
+        if (showChildrenCount <= 0) return;
+        int row, column, viewLeft, viewTop, viewRight, viewBottom;
+        for (int i = 0; i < showChildrenCount; i++) {
+            View childrenView = getChildAt(i);
+            row = i / mColumnCount;
+            column = i % mColumnCount;
+            viewLeft = mItemSpace * column + getPaddingLeft();
+            viewTop = mItemSpace * row + getPaddingTop();
+            viewRight = viewLeft;
+            viewBottom = viewTop;
+            childrenView.layout(viewLeft, viewTop, viewRight, viewBottom);
+            if (mAdapter != null) {
+                mAdapter.onBindView(this, childrenView, i);
+            }
+        }
+
+
     }
 
 
